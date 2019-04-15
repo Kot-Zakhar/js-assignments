@@ -17,8 +17,21 @@
  *  ]
  */
 function createCompassPoints() {
-    throw new Error('Not implemented');
+    var mapFunction = (value, index, arr) => {
+        let insert = arr[(index + 1) % arr.length];
+        return [value, index % 2 ? (insert + value) : (value + insert) ];
+    };
     var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    sides = [].concat(...sides.map(mapFunction));
+    sides = [].concat(...sides.map(mapFunction));
+    sides = [].concat(...sides.map((value, index, arr)=>{
+        if (!(index % 2)){
+            return []
+        }
+    }));
+
+    // return sides;
+    throw new Error('Not implemented');
 }
 
 
@@ -55,7 +68,29 @@ function createCompassPoints() {
  *
  *   'nothing to do' => 'nothing to do'
  */
-function* expandBraces(str) {
+function expandBraces(str) {
+    let OpenBraces = (line) => {
+        let firstBrace = line.indexOf("{");
+        let lastBrace = line.lastIndexOf("}");
+        if (firstBrace != lastBrace){
+
+            let start = line.substring(0, firstBrace);
+            let startBeforeComa = start.substring(0, start.lastIndexOf(",") + 1); // includes last coma in start part
+            let startAfterComa = start.substring(start.lastIndexOf(",") + 1); // not includes last coma in start part
+            
+            let middle = line.substring(firstBrace + 1, lastBrace);
+
+            let end = line.substring(lastBrace + 1);
+            let endBeforeComa = end.substring(0, end.indexOf(",")); // not includes first coma in end part
+            let endAfterComa = end.substring(end.indexOf(",")); // includes first coma in end part
+
+            middle = OpenBraces(middle); // result - line without braces, only comas
+            middle = middle.split(",").map((midPart) => startAfterComa + midPart + endBeforeComa).join(",");
+            // [].concat(...sides.map(mapFunction));
+            return startBeforeComa + middle + endAfterComa;
+        }
+        return line;
+    }
     throw new Error('Not implemented');
 }
 
