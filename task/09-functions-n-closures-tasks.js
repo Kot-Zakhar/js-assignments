@@ -26,7 +26,7 @@
  *
  */
 function getComposition(f,g) {
-    throw new Error('Not implemented');
+    return (x) => f(g(x));
 }
 
 
@@ -47,7 +47,7 @@ function getComposition(f,g) {
  *
  */
 function getPowerFunction(exponent) {
-    throw new Error('Not implemented');
+    return (x) => Math.pow(x, exponent);
 }
 
 
@@ -64,27 +64,34 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-    throw new Error('Not implemented');
+function getPolynom(...args) {
+    return (x) => {
+        let result = 0;
+        args.forEach((value, index, arr) => { 
+            result += value * Math.pow(x, arr.length - 1 - index);
+        })
+        return result;
+    }
 }
 
 
 /**
- * Memoizes passed function and returns function
+ * Memorizes passed function and returns function
  * which invoked first time calls the passed function and then always returns cached result.
  *
- * @params {Function} func - function to memoize
- * @return {Function} memoized function
+ * @params {Function} func - function to memorize
+ * @return {Function} memorized function
  *
  * @example
- *   var memoizer = memoize(() => Math.random());
- *   memoizer() => some random number  (first run, evaluates the result of Math.random())
- *   memoizer() => the same random number  (second run, returns the previous cached result)
+ *   var memorizer = memorize(() => Math.random());
+ *   memorizer() => some random number  (first run, evaluates the result of Math.random())
+ *   memorizer() => the same random number  (second run, returns the previous cached result)
  *   ...
- *   memoizer() => the same random number  (next run, returns the previous cached result)
+ *   memorizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(func) {
-    throw new Error('Not implemented');
+function memorize(func) {
+    let cache = null;
+    return () => cache ? cache : (cache = func());
 }
 
 
@@ -103,8 +110,23 @@ function memoize(func) {
  * }, 2);
  * retryer() => 2
  */
+// shuld the retry-functon return the amount of tries or the result of passed-into-function?
+// now it returns the result of passed-into-function
 function retry(func, attempts) {
-    throw new Error('Not implemented');
+    return () => {
+        var tries = 0;
+        var result = null;
+        while (tries < attempts){
+            try{
+                result = func();
+                break;
+            }
+            catch(err){
+                tries++;
+            }
+        }
+        return result;
+    }
 }
 
 
@@ -132,7 +154,13 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    throw new Error('Not implemented');
+    return (...args) => {
+        let funcStr = func.name + "(" + args.map((value) => JSON.stringify(value)).join(",") + ")";
+        logFunc(funcStr + " starts");
+        let result = func(...args);
+        logFunc(funcStr + " ends");
+        return result;
+    }
 }
 
 
@@ -149,8 +177,8 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(fn) {
-    throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args) {
+    return (...anotherArgs) => fn(...args, ...anotherArgs);
 }
 
 
@@ -171,7 +199,8 @@ function partialUsingArguments(fn) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-    throw new Error('Not implemented');
+    let start = startFrom;
+    return () => start++;
 }
 
 
@@ -179,7 +208,7 @@ module.exports = {
     getComposition: getComposition,
     getPowerFunction: getPowerFunction,
     getPolynom: getPolynom,
-    memoize: memoize,
+    memorize: memorize,
     retry: retry,
     logger: logger,
     partialUsingArguments: partialUsingArguments,

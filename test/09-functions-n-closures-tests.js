@@ -56,19 +56,19 @@ describe('09-functions-n-closures-tasks', function() {
     });
 
 
-    it.optional('memoize method should cache the result of function', () => {
+    it.optional('memorize method should cache the result of function', () => {
         var numberOfCalls = 0;
         var fn = function() {
             numberOfCalls++;
             return Math.random();
         }
-        var memoizer = tasks.memoize(fn);
-        var expected = memoizer();
-        assert.equal(numberOfCalls, 1, 'memoize result should evaluate the specified function at first call');
+        var memorizer = tasks.memorize(fn);
+        var expected = memorizer();
+        assert.equal(numberOfCalls, 1, 'memorize result should evaluate the specified function at first call');
         for(var i=0; i<10; i++) {
-           let actual = memoizer();
-           assert.equal(actual, expected, 'memoize result should return the cached value at second and next calls');
-           assert.equal(numberOfCalls, 1, 'memoize result should not evaluate the specified function at second and next calls');
+           let actual = memorizer();
+           assert.equal(actual, expected, 'memorize result should return the cached value at second and next calls');
+           assert.equal(numberOfCalls, 1, 'memorize result should not evaluate the specified function at second and next calls');
         }
     });
 
