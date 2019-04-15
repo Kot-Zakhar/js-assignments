@@ -1,0 +1,9 @@
+{
+  "name": "tasks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "00-index.js",
+  "scripts": {},
+  "author": "Zakhar",
+  "license": "ISC"
+}
